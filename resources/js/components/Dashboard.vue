@@ -1,35 +1,43 @@
 <template>
     <div class="container">
-        <h1>Hallo . . . welcome to your work space.</h1>
+        <div class="dashboard row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Dashboard</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <p>Seja bem vindo {{ user.name }}.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+    import {getUser} from '../partials/auth';
     export default {
         data(){
             return {
-                user: null
+                user: ''
             }
         },
         created() {
-            this.getUser();
+            this.currentUser();
         },
         methods:{
-            getUser: function(){
-                const config = {
-                    headers: { Authorization: `Bearer ${this.currentUser.token}` }
-                };
-
-                axios.get(
-                    'http://localhost/seventh/public/api/auth/user',
-
-                    config
-                ).then(console.log).catch(console.log);
-            }
-        },
-        computed:{
             currentUser(){
-                return this.$store.getters.currentUser
+                var vr = this;
+                getUser(localStorage.getItem('token'))
+                    .then(res => {
+                        vr.user = res.user;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
             }
         }
     }

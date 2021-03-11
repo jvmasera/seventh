@@ -22,12 +22,14 @@ export function login(credentials){
     })
 }
 
-export function getLoggedinUser(){
-    const userStr = localStorage.getItem('user');
-
-    if(!userStr){
-        return null
-    }
-
-    return JSON.parse(userStr);
+export function getUser(token){
+    return new Promise((res,rej)=>{
+        axios.get('/api/auth/user', {headers: { Authorization: `Bearer ${JSON.parse(token).token}` }})
+            .then(response => {
+                res(response.data);
+            })
+            .catch(err => {
+                rej('Combinação errada de e-mail / senha.')
+            })
+    })
 }

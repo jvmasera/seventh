@@ -17,11 +17,11 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::post('auth/register', 'UserController@register');
-Route::post('auth/login', 'UserController@authenticate');
+Route::post('auth/register', 'AuthController@register');
+Route::post('auth/login', 'AuthController@authenticate');
 Route::get('auth/open', 'DataController@open');
 
 Route::group(['middleware' => ['jwt.verify']], function() {
-    Route::get('auth/user', 'UserController@getAuthenticatedUser');
+    Route::get('auth/user', 'AuthController@getAuthenticatedUser');
     Route::get('auth/closed', 'DataController@closed');
 });

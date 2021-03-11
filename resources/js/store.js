@@ -1,11 +1,7 @@
-import {getLoggedinUser} from './partials/auth';
-
-const user = getLoggedinUser();
-
 export default {
     state: {
-        currentUser: user,
-        isLoggedIn: !!user,
+        currentUser: null,
+        isLoggedIn: !!null,
         loading: false,
         auth_error: null,
         reg_error:null,
@@ -41,15 +37,14 @@ export default {
             state.isLoggedin = true;
             state.loading = false;
             state.currentUser = Object.assign({},{token: payload.token});
-
-            localStorage.setItem("user", JSON.stringify(state.currentUser));
+            localStorage.setItem("token", JSON.stringify(state.currentUser));
         },
         loginFailed(state, payload){
             state.loading = false;
             state.auth_error = payload.error;
         },
         logout(state){
-            localStorage.removeItem("user");
+            localStorage.removeItem("token");
             state.isLoggedin = false;
             state.currentUser = null;
         },

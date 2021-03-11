@@ -1697,34 +1697,44 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _partials_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../partials/auth */ "./resources/js/partials/auth.js");
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: null
+      user: ''
     };
   },
   created: function created() {
-    this.getUser();
+    this.currentUser();
   },
   methods: {
-    getUser: function getUser() {
-      var config = {
-        headers: {
-          Authorization: "Bearer ".concat(this.currentUser.token)
-        }
-      };
-      axios.get('http://localhost/seventh/public/api/auth/user', config).then(console.log)["catch"](console.log);
-    }
-  },
-  computed: {
     currentUser: function currentUser() {
-      return this.$store.getters.currentUser;
+      var vr = this;
+      Object(_partials_auth__WEBPACK_IMPORTED_MODULE_0__["getUser"])(localStorage.getItem('token')).then(function (res) {
+        vr.user = res.user;
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   }
 });
@@ -49466,15 +49476,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "dashboard row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "container-fluid" }, [
+              _c("p", [_vm._v("Seja bem vindo " + _vm._s(_vm.user.name) + ".")])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("h1", [_vm._v("Hallo . . . welcome to your work space.")])
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", [_vm._v("Dashboard")])
     ])
   }
 ]
@@ -66741,8 +66765,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
 /* harmony import */ var _routes_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./routes.js */ "./resources/js/routes.js");
-/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
-/* harmony import */ var _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/MainApp.vue */ "./resources/js/components/MainApp.vue");
+/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
+/* harmony import */ var _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/MainApp.vue */ "./resources/js/components/MainApp.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -66759,13 +66783,13 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   routes: _routes_js__WEBPACK_IMPORTED_MODULE_4__["routes"],
   mode: 'history'
 });
-var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store(_store_js__WEBPACK_IMPORTED_MODULE_6__["default"]);
+var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store(_store_js__WEBPACK_IMPORTED_MODULE_5__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: router,
   store: store,
   components: {
-    MainApp: _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
+    MainApp: _components_MainApp_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
   }
 });
 
@@ -67252,14 +67276,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************!*\
   !*** ./resources/js/partials/auth.js ***!
   \***************************************/
-/*! exports provided: registerUser, login, getLoggedinUser */
+/*! exports provided: registerUser, login, getUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerUser", function() { return registerUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLoggedinUser", function() { return getLoggedinUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUser", function() { return getUser; });
 function registerUser(credentials) {
   return new Promise(function (res, rej) {
     axios.post('/api/auth/register', credentials).then(function (response) {
@@ -67278,14 +67302,18 @@ function login(credentials) {
     });
   });
 }
-function getLoggedinUser() {
-  var userStr = localStorage.getItem('user');
-
-  if (!userStr) {
-    return null;
-  }
-
-  return JSON.parse(userStr);
+function getUser(token) {
+  return new Promise(function (res, rej) {
+    axios.get('/api/auth/user', {
+      headers: {
+        Authorization: "Bearer ".concat(JSON.parse(token).token)
+      }
+    }).then(function (response) {
+      res(response.data);
+    })["catch"](function (err) {
+      rej('Combinação errada de e-mail / senha.');
+    });
+  });
 }
 
 /***/ }),
@@ -67340,13 +67368,10 @@ var routes = [{
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _partials_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./partials/auth */ "./resources/js/partials/auth.js");
-
-var user = Object(_partials_auth__WEBPACK_IMPORTED_MODULE_0__["getLoggedinUser"])();
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
-    currentUser: user,
-    isLoggedIn: !!user,
+    currentUser: null,
+    isLoggedIn: !!null,
     loading: false,
     auth_error: null,
     reg_error: null,
@@ -67384,14 +67409,14 @@ var user = Object(_partials_auth__WEBPACK_IMPORTED_MODULE_0__["getLoggedinUser"]
       state.currentUser = Object.assign({}, {
         token: payload.token
       });
-      localStorage.setItem("user", JSON.stringify(state.currentUser));
+      localStorage.setItem("token", JSON.stringify(state.currentUser));
     },
     loginFailed: function loginFailed(state, payload) {
       state.loading = false;
       state.auth_error = payload.error;
     },
     logout: function logout(state) {
-      localStorage.removeItem("user");
+      localStorage.removeItem("token");
       state.isLoggedin = false;
       state.currentUser = null;
     },
