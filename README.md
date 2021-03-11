@@ -73,6 +73,12 @@ http://seventh
 
 <h3>Configurando o sistema:</h3>
 
+Com os containers já rodando, abra a CLI do Apache2 do Laradock
+```
+cd laradock
+docker-compose exec workspace bash
+```
+
 
 **1º.:** Abrir a pasta raíz do projeto
 ````
@@ -105,3 +111,8 @@ php artisan migrate
 ````
 php artisan key:generate
 ````
+
+**9º.:** Por último, execute o script do package.json para gerar a Build da aplicação
+````
+npm run prod
+```` 
