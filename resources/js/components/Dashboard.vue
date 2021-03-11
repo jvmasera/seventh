@@ -40,11 +40,13 @@
 
 <script>
     import Perfil from './Perfil.vue';
+    import Usuarios from './Usuarios.vue';
+    import Logs from './Logs.vue';
     import { mapState } from 'vuex';
 
     export default {
         name: 'Dashboard',
-        components: { Perfil },
+        components: { Perfil, Usuarios, Logs },
         data(){
             return {
                 role: this.$store.state.user.role

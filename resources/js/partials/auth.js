@@ -57,7 +57,19 @@ export function logs(token){
                 res(response.data);
             })
             .catch(err => {
-                rej('Erro os logs dos usuários.')
+                rej('Erro ao buscar os logs dos usuários.')
+            })
+    })
+}
+
+export function getUserAll(token, $userId){
+    return new Promise((res,rej)=>{
+        axios.get('/api/auth/user/all/' + $userId, {headers: { Authorization: `Bearer ${JSON.parse(token).token}` }})
+            .then(response => {
+                res(response.data);
+            })
+            .catch(err => {
+                rej('Erro ao buscar os usuários.')
             })
     })
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Collection;
+use DB;
 
 class UserController extends Controller
 {
@@ -13,7 +15,7 @@ class UserController extends Controller
         //Validando Campos
         $validated = $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|unique:users,email,' . Auth::user()->id,
+            'email' => 'required|unique:users,email,' . $userId,
             'role' => 'required'
         ]);
 
@@ -31,6 +33,20 @@ class UserController extends Controller
     }
 
     public function logs(){
-        return User::all()->authentications->paginate(30);
+        $logs = DB::table('users')
+            ->join('authentication_log', 'users.id', '=', 'authentication_log.authenticatable_id')
+            ->select('users.name', 'authentication_log.ip_address', 'authentication_log.login_at')
+            ->paginate(10);
+        return $logs;
+    }
+
+    public function getUsers($userId){
+        $users = DB::table('users')
+            ->join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->select('users.id', 'users.name', 'users.email', 'roles.slug')
+            ->where('users.id', '!=', $userId)
+            ->paginate(10);
+        return $users;
     }
 }
