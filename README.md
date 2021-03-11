@@ -116,3 +116,9 @@ php artisan key:generate
 ````
 npm run dev
 ```` 
+
+**10º.:** Um usuário do tipo Administrador já é criado junto com as migrate:
+````
+user: admin@admin.com
+password: teste123
+````
