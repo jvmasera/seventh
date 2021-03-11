@@ -114,5 +114,5 @@ php artisan key:generate
 
 **9º.:** Por último, execute o script do package.json para gerar a Build da aplicação
 ````
-npm run prod
+npm run dev
 ```` 
