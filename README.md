@@ -21,14 +21,19 @@ npm install
 **4º.:** Criar o arquivo do banco de dados sqlite
 ````
 cd database
-````
-````
 touch database.sqlite
 ````
-**5º.:** Migrar as migrations
+**5º.:** Renomear o arquivo .env.example na pasta raíz do projeto para .env
+
+**6°.:** Gerar a chave do JWT
 ````
-cd ..
+php artisan jwt:secret
 ````
+**7º.:** Migrar as migrations
 ````
 php artisan migrate
+````
+**8º.:** Gerar a chave da aplicação
+````
+php artisan key:generate
 ````
