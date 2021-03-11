@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import {login} from '../partials/auth';
+    import {getUser, login} from '../partials/auth';
     export default {
         data(){
             return {
@@ -47,14 +47,34 @@
         },
         methods:{
             authenticate(){
+                var vr = this;
                 this.$store.dispatch('login');
                 login(this.$data.formLogin)
                     .then(res => {
                         this.$store.commit("loginSuccess", res);
-                        this.$router.push({path: '/dashboard'});
+                        vr.currentUser();
                     })
                     .catch(error => {
                         this.$store.commit("loginFailed", {error});
+                    })
+            },
+            currentUser(){
+                getUser(localStorage.getItem('token'))
+                    .then(res => {
+                        var role = [];
+                        $.each(res.user.roles, function(index, item){
+                            role.push(item.slug);
+                        });
+                        this.$store.commit("setUser", {
+                            id: res.user.id,
+                            name: res.user.name,
+                            email: res.user.email,
+                            role: role
+                        });
+                        this.$router.push({path: '/dashboard'});
+                    })
+                    .catch(error => {
+                        console.log(error);
                     })
             }
         },

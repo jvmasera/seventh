@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -46,6 +47,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password')),
         ]);
 
+        $user->assignRole('cliente');
+
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user','token'),201);
@@ -73,6 +76,6 @@ class AuthController extends Controller
 
         }
 
-        return response()->json(compact('user'));
+        return response()->json(compact('user', $user->getRoles()));
     }
 }

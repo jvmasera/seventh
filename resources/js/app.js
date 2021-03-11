@@ -6,10 +6,12 @@ import VeeValidate from 'vee-validate'
 import {routes} from './routes.js';
 import storeData from './store.js';
 import MainApp from './components/MainApp.vue';
+import VueFormulate from '@braid/vue-formulate';
 
 Vue.use(VeeValidate);
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueFormulate);
 
 const router = new VueRouter({
     routes,

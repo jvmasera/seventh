@@ -19,9 +19,10 @@ use Illuminate\Http\Request;
 
 Route::post('auth/register', 'AuthController@register');
 Route::post('auth/login', 'AuthController@authenticate');
-Route::get('auth/open', 'DataController@open');
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('auth/user', 'AuthController@getAuthenticatedUser');
-    Route::get('auth/closed', 'DataController@closed');
+    Route::post('auth/user/edit/{userId}', 'UserController@update');
+    Route::get('auth/user/logs', 'UserController@logs');
 });
+

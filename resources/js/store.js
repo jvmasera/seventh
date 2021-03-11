@@ -1,5 +1,6 @@
 export default {
     state: {
+        user: null,
         currentUser: null,
         isLoggedIn: !!null,
         loading: false,
@@ -54,6 +55,9 @@ export default {
         },
         registerFailed(state, payload){
             state.reg_error = payload.error;
+        },
+        setUser(state, payload){
+            state.user = payload;
         },
     },
     actions: {
